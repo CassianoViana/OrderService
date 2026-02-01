@@ -1,4 +1,4 @@
-package com.allo.restaurant.menu.adapters.rest.contracts;
+package com.allo.restaurant.menu.adapters.inbound.rest.contracts;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
