@@ -11,7 +11,8 @@ public record MenuItemResponse(
         @JsonProperty("name") String name,
         @JsonProperty("description") String description,
         @JsonProperty("price") BigDecimal price,
-        @JsonProperty("createdAt") LocalDateTime createdAt
+        @JsonProperty("createdAt") LocalDateTime createdAt,
+        @JsonProperty("updatedAt") LocalDateTime updatedAt
 ) {
     @JsonCreator
     public MenuItemResponse {

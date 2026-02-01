@@ -13,6 +13,7 @@ public record MenuItemModel(
         String name,
         String description,
         BigDecimal price,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt
 ) {
 }
