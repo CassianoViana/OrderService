@@ -1,0 +1,8 @@
+{
+  "customer": {
+    "fullName": "",
+    "address": "",
+    "email": ""
+  },
+  "orderItems": []
+}

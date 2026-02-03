@@ -1,0 +1,17 @@
+{
+  "customer": {
+    "fullName": "John Doe",
+    "address": "123 Main St",
+    "email": "john@example.com"
+  },
+  "orderItems": [
+    {
+      "productId": "pizza123",
+      "quantity": 2
+    },
+    {
+      "productId": "drink456",
+      "quantity": 1
+    }
+  ]
+}

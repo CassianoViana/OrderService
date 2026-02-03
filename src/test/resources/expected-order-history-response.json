@@ -1,0 +1,27 @@
+{
+  "orders": [
+    {
+      "id": "${json-unit.ignore}",
+      "customer": {
+        "fullName": "${json-unit.ignore}",
+        "address": "${json-unit.ignore}",
+        "email": "${json-unit.ignore}"
+      },
+      "orderItems": [
+        {
+          "productId": "${json-unit.ignore}",
+          "name": "${json-unit.ignore}",
+          "quantity": "${json-unit.ignore}",
+          "price": "${json-unit.ignore}"
+        }
+      ],
+      "totalAmount": "${json-unit.ignore}",
+      "status": "${json-unit.ignore}",
+      "createdAt": "${json-unit.ignore}",
+      "updatedAt": "${json-unit.ignore}"
+    }
+  ],
+  "limit": 3,
+  "offset": 0,
+  "totalRecords": "${json-unit.ignore}"
+}

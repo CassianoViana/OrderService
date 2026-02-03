@@ -25,8 +25,4 @@ public class MockHelper {
         }
     }
 
-    public <T> T readFileAs(String filePath, Class<T> valueType) throws IOException {
-        String content = readFile(filePath);
-        return objectMapper.readValue(content, valueType);
-    }
 }

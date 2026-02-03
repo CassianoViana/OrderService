@@ -1,0 +1,26 @@
+{
+  "id": "${json-unit.ignore}",
+  "customer": {
+    "fullName": "John Doe",
+    "address": "123 Main St",
+    "email": "john@example.com"
+  },
+  "orderItems": [
+    {
+      "productId": "pizza123",
+      "name": "${json-unit.ignore}",
+      "quantity": 2,
+      "price": "${json-unit.ignore}"
+    },
+    {
+      "productId": "drink456",
+      "name": "${json-unit.ignore}",
+      "quantity": 1,
+      "price": "${json-unit.ignore}"
+    }
+  ],
+  "totalAmount": "${json-unit.ignore}",
+  "status": "CREATED",
+  "createdAt": "${json-unit.ignore}",
+  "updatedAt": "${json-unit.ignore}"
+}
