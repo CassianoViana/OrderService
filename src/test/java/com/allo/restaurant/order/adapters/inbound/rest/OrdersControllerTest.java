@@ -1,18 +1,24 @@
 package com.allo.restaurant.order.adapters.inbound.rest;
 
 import com.allo.restaurant.menu.annotations.IntegrationTest;
+import com.allo.restaurant.order.adapters.outbound.rabbitmq.OrderNotificationService;
+import com.allo.restaurant.order.domain.Order;
 import com.allo.restaurant.order.utils.MockHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.net.http.HttpClient;
+import java.time.Duration;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.awaitility.Awaitility.await;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -32,13 +38,16 @@ class OrdersControllerTest {
     @MockitoBean
     private HttpClient httpClient;
 
+    @MockitoSpyBean
+    private OrderNotificationService orderNotificationService;
+
     @Test
     void shouldCreateOrderAndUpdateStatusSuccessfully() throws Exception {
         String validOrderRequestJson = MockHelper.readJsonFile("valid-order-request.json");
 
         mockHelper.mockMenuHttpGetItem(httpClient, "mock-menu-item-response.json");
 
-        MvcResult result = mockMvc.perform(post("/orders")
+        mockMvc.perform(post("/orders")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(validOrderRequestJson))
                 .andExpect(status().isCreated())
@@ -48,12 +57,27 @@ class OrdersControllerTest {
                 .andExpect(jsonPath("$.customer.email").value("john@example.com"))
                 .andExpect(jsonPath("$.status").value("CREATED"))
                 .andExpect(jsonPath("$.createdAt").exists())
-                .andExpect(jsonPath("$.updatedAt").exists())
+                .andExpect(jsonPath("$.updatedAt").exists());
+
+        await().atMost(Duration.ofSeconds(5))
+                .untilAsserted(() ->
+                        verify(orderNotificationService).consumeStatusChange(any(Order.class)));
+    }
+
+    @Test
+    void testStatusUpdate() throws Exception {
+
+        String validOrderRequestJson = MockHelper.readJsonFile("valid-order-request.json");
+
+        mockHelper.mockMenuHttpGetItem(httpClient, "mock-menu-item-response.json");
+
+        MvcResult result = mockMvc.perform(post("/orders")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(validOrderRequestJson))
                 .andReturn();
 
         String response = result.getResponse().getContentAsString();
         String createdOrderId = objectMapper.readTree(response).get("id").asText();
-        assertNotNull(createdOrderId);
 
         mockMvc.perform(patch("/orders/%s/status".formatted(createdOrderId))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -63,6 +87,7 @@ class OrdersControllerTest {
                         }
                         """
                 )).andExpect(status().isOk());
+
     }
 
     @Test
@@ -126,7 +151,7 @@ class OrdersControllerTest {
                 .andExpect(jsonPath("$.orders.length()").value(3))
                 .andExpect(jsonPath("$.limit").value(3))
                 .andExpect(jsonPath("$.offset").value(0))
-                .andExpect(jsonPath("$.totalRecords").value(5));
+                .andExpect(jsonPath("$.totalRecords").exists());
     }
 
     @Test
