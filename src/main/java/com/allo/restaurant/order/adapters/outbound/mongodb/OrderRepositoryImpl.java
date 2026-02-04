@@ -3,6 +3,7 @@ package com.allo.restaurant.order.adapters.outbound.mongodb;
 import com.allo.restaurant.order.adapters.outbound.mongodb.mapper.OrderModelMapper;
 import com.allo.restaurant.order.domain.Order;
 import com.allo.restaurant.order.domain.PaginationRequest;
+import com.allo.restaurant.order.exceptions.NotFoundException;
 import com.allo.restaurant.order.ports.outbound.OrderRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -11,6 +12,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class OrderRepositoryImpl implements OrderRepository {
@@ -33,8 +35,9 @@ public class OrderRepositoryImpl implements OrderRepository {
     @Override
     public Order findById(String id) {
         Query query = new Query(Criteria.where("id").is(id));
-        OrderModel orderModel = mongoTemplate.findOne(query, OrderModel.class);
-        return orderModel != null ? orderModelMapper.toOrder(orderModel) : null;
+        return Optional.ofNullable(mongoTemplate.findOne(query, OrderModel.class))
+                .map(orderModelMapper::toOrder)
+                .orElseThrow(() -> new NotFoundException("Order %s not found".formatted(id)));
     }
 
     @Override
@@ -43,7 +46,7 @@ public class OrderRepositoryImpl implements OrderRepository {
                 .skip(pagination.offset())
                 .limit(pagination.size())
                 .with(Sort.by(Sort.Direction.DESC, "createdAt"));
-        
+
         List<OrderModel> orderModels = mongoTemplate.find(query, OrderModel.class);
         return orderModels.stream()
                 .map(orderModelMapper::toOrder)

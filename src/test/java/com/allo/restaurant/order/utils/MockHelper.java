@@ -17,15 +17,12 @@ import static org.mockito.Mockito.when;
 @Component
 public class MockHelper {
 
-    @MockitoBean
-    private HttpClient httpClient;
-
     public static String readJsonFile(String filename) throws Exception {
         File file = ResourceUtils.getFile("classpath:" + filename);
         return Files.readString(file.toPath());
     }
 
-    public void mockMenuHttpGetItem(String expectedResponse) throws Exception {
+    public void mockMenuHttpGetItem(HttpClient httpClient, String expectedResponse) throws Exception {
         String pizzaResponse = readJsonFile(expectedResponse);
 
         HttpResponse<String> pizzaHttpResponse = mock(HttpResponse.class);

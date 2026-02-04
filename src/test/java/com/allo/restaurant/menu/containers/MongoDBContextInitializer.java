@@ -1,4 +1,4 @@
-package com.allo.restaurant.menu.annotations;
+package com.allo.restaurant.menu.containers;
 
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;

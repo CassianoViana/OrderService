@@ -3,6 +3,7 @@ package com.allo.restaurant.order.adapters.outbound.http;
 import com.allo.restaurant.order.domain.MenuItem;
 import com.allo.restaurant.order.ports.outbound.MenuItemUseCase;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +15,7 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 
 @Component
+@RequiredArgsConstructor
 public class MenuHttpClientImpl implements MenuItemUseCase {
 
     private final HttpClient httpClient;
@@ -21,11 +23,6 @@ public class MenuHttpClientImpl implements MenuItemUseCase {
 
     @Value("${menu.service.url}")
     private String menuServiceUrl;
-
-    public MenuHttpClientImpl(HttpClient httpClient, ObjectMapper objectMapper) {
-        this.httpClient = httpClient;
-        this.objectMapper = objectMapper;
-    }
 
     @Override
     public MenuItem getMenuItem(String id) {
