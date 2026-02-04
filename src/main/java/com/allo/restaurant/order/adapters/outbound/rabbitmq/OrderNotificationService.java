@@ -1,7 +1,10 @@
 package com.allo.restaurant.order.adapters.outbound.rabbitmq;
 
+import com.allo.restaurant.order.adapters.inbound.rest.mappers.OrderContractMapper;
 import com.allo.restaurant.order.config.RabbitMQConfig;
 import com.allo.restaurant.order.domain.Order;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -9,13 +12,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class OrderNotificationService {
 
     private final RabbitTemplate rabbitTemplate;
-
-    public OrderNotificationService(RabbitTemplate rabbitTemplate) {
-        this.rabbitTemplate = rabbitTemplate;
-    }
+    private final OrderContractMapper contractMapper;
 
     public void publishStatusChange(Order order) {
         log.info("Publishing status change for order: {}", order.id());

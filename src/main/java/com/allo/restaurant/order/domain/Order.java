@@ -19,7 +19,7 @@ public record Order(
     public enum OrderStatus {
         CREATED, CONFIRMED, PREPARING, READY, COMPLETED, CANCELLED
     }
-    
+
     public static BigDecimal calculateTotalAmount(List<OrderItem> orderItems) {
         return orderItems.stream()
                 .map(item -> item.price().multiply(BigDecimal.valueOf(item.quantity())))
